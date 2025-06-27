@@ -4,10 +4,20 @@
   "description": "This is a simple translator WhatsApp bot built with CloudFlare Workers and TypeScript",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "wr": "wrangler",
+    "wrangler": "wrangler"
   },
-  "keywords": ["cloudflare", "typescript", "nodejs", "workers"],
+  "keywords": [
+    "cloudflare",
+    "typescript",
+    "nodejs",
+    "workers"
+  ],
   "author": "Oleg Korobenko <oleg.korobenko@gmail.com>",
   "license": "MIT",
-  "packageManager": "pnpm@10.12.3"
+  "packageManager": "pnpm@10.12.3",
+  "devDependencies": {
+    "wrangler": "^4.22.0"
+  }
 }
