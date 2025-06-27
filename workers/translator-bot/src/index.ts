@@ -10,7 +10,7 @@ const Whatsapp = new WhatsAppAPI({
     token: TOKEN,
     appSecret: APP_SECRET,
     webhookVerifyToken: VERIFY_TOKEN,
-		v: "22.0"
+		v: "23.0"
 });
 
 // Assuming get is called on a GET request to your server
