@@ -1,7 +1,7 @@
 {
   "name": "cf-workers-translator-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a simple translator WhatsApp bot built with CloudFlare Workers and TypeScript",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
