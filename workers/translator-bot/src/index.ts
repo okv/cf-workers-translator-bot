@@ -18,11 +18,11 @@ export default {
 		if (pathname === '/webhook') {
 			switch (request.method) {
 				case 'GET':
-				  return new Response('GET /webhook');
+					return new Response('GET /webhook');
 				case 'POST':
-				  return new Response('POST /webhook');
+					return new Response('POST /webhook');
 				default:
-		      return new Response('Not Found');
+					return new Response('Not Found');
 			}
 		}
 
