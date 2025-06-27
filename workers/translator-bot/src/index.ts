@@ -12,7 +12,20 @@
  */
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(request: Request, env, ctx): Promise<Response> {
+		const url: URL = new URL(request.url);
+		const { pathname } = url;
+		if (pathname === '/webhook') {
+			switch (request.method) {
+				case 'GET':
+				  return new Response('GET /webhook');
+				case 'POST':
+				  return new Response('POST /webhook');
+				default:
+		      return new Response('Not Found');
+			}
+		}
+
+		return new Response('Not Found');
 	},
 } satisfies ExportedHandler<Env>;
