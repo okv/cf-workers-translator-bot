@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      whatsapp-api-js:
+        specifier: ^5.3.0
+        version: 5.3.0
     devDependencies:
       '@cloudflare/vitest-pool-workers':
         specifier: ^0.8.19
@@ -982,6 +986,10 @@ packages:
       jsdom:
         optional: true
 
+  whatsapp-api-js@5.3.0:
+    resolution: {integrity: sha512-Rw2pfh0qsbQ1FT+Y4F9Lc8pfoyT80ghVE7xAXDESYknQNfjwawb/lCI3SXN/+sE9wrn7y7ob5CDPLNO9JfwsVg==}
+    engines: {node: '>=16'}
+
   why-is-node-running@2.3.0:
     resolution: {integrity: sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w==}
     engines: {node: '>=8'}
@@ -1803,6 +1811,8 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  whatsapp-api-js@5.3.0: {}
 
   why-is-node-running@2.3.0:
     dependencies:
