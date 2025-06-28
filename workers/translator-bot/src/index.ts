@@ -8,10 +8,8 @@ import {
 } from './whatsapp';
 
 export default {
-  async fetch(request: Request, env, ctx): Promise<Response> {
-    const TOKEN = env.WHATSAPP_TOKEN;
-
-    function get(request: Request): Response {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    function getHandler(request: Request): Response {
       const { searchParams } = new URL(request.url);
       const body = getWebhook(
         {
@@ -28,7 +26,7 @@ export default {
       });
     }
 
-    async function post(request: Request): Promise<Response> {
+    async function postHandler(request: Request): Promise<Response> {
       const requestBody: string = await request.text();
 
       const responseBody = await postWebhook(
@@ -36,12 +34,12 @@ export default {
         requestBody,
         request.headers.get('x-hub-signature-256') ?? '',
         env.WHATSAPP_APP_SECRET,
-        onMessage,
+        onWhatsAppMessage,
       );
       return new Response(responseBody ?? '');
     }
 
-    async function onMessage(
+    async function onWhatsAppMessage(
       phoneID: string,
       from: string,
       message: ServerMessageTypesPatched,
@@ -65,7 +63,7 @@ export default {
             break;
         }
 
-        response = await sendMessage(TOKEN, phoneID, from, new Text(content));
+        response = await sendMessage(env.WHATSAPP_TOKEN, phoneID, from, new Text(content));
       }
 
       console.log(
@@ -75,7 +73,7 @@ export default {
             'all the other media types.',
       );
 
-      markAsRead(TOKEN, phoneID, message.id);
+      markAsRead(env.WHATSAPP_TOKEN, phoneID, message.id);
     }
 
     const url: URL = new URL(request.url);
@@ -83,11 +81,9 @@ export default {
     if (pathname === '/webhook') {
       switch (request.method) {
         case 'GET':
-          return get(request);
+          return getHandler(request);
         case 'POST':
-          return await post(request);
-        default:
-          return new Response('Not Found');
+          return await postHandler(request);
       }
     }
 
