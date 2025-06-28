@@ -1,11 +1,5 @@
-import {
-  ServerMessageTypesPatched,
-  Text,
-  getWebhook,
-  postWebhook,
-  sendMessage,
-  markAsRead,
-} from './whatsapp';
+import { ServerMessageTypesPatched, getWebhook, postWebhook } from './whatsapp';
+import { messageHandler } from './mhandler';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -39,41 +33,14 @@ export default {
       return new Response(responseBody ?? '');
     }
 
-    async function onWhatsAppMessage(
+    function onWhatsAppMessage(
       phoneID: string,
       from: string,
       message: ServerMessageTypesPatched,
       name: string,
+      data: object,
     ) {
-      console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
-
-      let response;
-
-      if (['text', 'image', 'document'].includes(message.type)) {
-        let content = '';
-        switch (message.type) {
-          case 'text':
-            content = `*${name}* said:\n\n${message.text.body}`;
-            break;
-          case 'image':
-            content = `*${name}* shared:\n\n an image with ID ${message.image.id}`;
-            break;
-          case 'document':
-            content = `*${name}* shared:\n\n an document with ID ${message.document.id}`;
-            break;
-        }
-
-        response = await sendMessage(env.WHATSAPP_TOKEN, phoneID, from, new Text(content));
-      }
-
-      console.log(
-        response ??
-          'There are more types of messages, such as contacts, ' +
-            'locations, templates, interactive, reactions and ' +
-            'all the other media types.',
-      );
-
-      markAsRead(env.WHATSAPP_TOKEN, phoneID, message.id);
+      return messageHandler(phoneID, from, message, name, data, env.WHATSAPP_TOKEN);
     }
 
     const url: URL = new URL(request.url);
