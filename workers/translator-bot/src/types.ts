@@ -386,3 +386,9 @@ export type ServerUnknownMessage = {
     },
   ];
 };
+
+export type GetParams = {
+  'hub.mode': 'subscribe';
+  'hub.verify_token': string;
+  'hub.challenge': string;
+};

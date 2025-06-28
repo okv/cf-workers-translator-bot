@@ -1,6 +1,6 @@
 import { WhatsAppAPI } from 'whatsapp-api-js';
 import { Text } from 'whatsapp-api-js/messages';
-import type { PostData, ServerMessageTypes } from './types';
+import type { PostData, ServerMessageTypes, GetParams } from './types';
 
 async function apiFetch(url: string, token: string, options: RequestInit = {}): Promise<Response> {
   console.log('apiFetch sending request:', { url });
@@ -136,26 +136,18 @@ async function sendMessage(
   return response;
 }
 
-// Assuming get is called on a GET request to your server
-function get(api: WhatsAppAPI, request: Request): Response {
-  // const { searchParams } = new URL(request.url);
-  // Whatsapp.get({
-  // 	'hub.mode': 'subscribe',
-  // 	'hub.verify_token': searchParams.get('hub.verify_token') ?? '',
-  // 	'hub.challenge': searchParams.get('hub.challenge') ?? '',
-  // });
-
-  const { searchParams } = new URL(request.url);
-  const body = api.get({
-    'hub.mode': 'subscribe',
-    'hub.verify_token': searchParams.get('hub.verify_token') ?? '',
-    'hub.challenge': searchParams.get('hub.challenge') ?? '',
-  });
-
-  return new Response(body, {
-    status: 200,
-    headers: { 'Content-Type': 'text/html' },
-  });
+function getWebhook(params: GetParams, verifyToken?: string) {
+  if (!verifyToken) {
+    throw new Error('WhatsAppAPIMissingVerifyTokenError');
+  }
+  const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = params;
+  if (!mode || !token) {
+    throw new Error('WhatsAppAPIMissingSearchParamsError');
+  }
+  if (mode === 'subscribe' && token === verifyToken) {
+    return challenge;
+  }
+  throw new Error('WhatsAppAPIFailedToVerifyTokenError');
 }
 
 export default {
@@ -168,6 +160,24 @@ export default {
       webhookVerifyToken: env.WHATSAPP_VERIFY_TOKEN,
       v: 'v23.0',
     });
+
+    // Assuming get is called on a GET request to your server
+    function get(request: Request): Response {
+      const { searchParams } = new URL(request.url);
+      const body = getWebhook(
+        {
+          'hub.mode': 'subscribe',
+          'hub.verify_token': searchParams.get('hub.verify_token') ?? '',
+          'hub.challenge': searchParams.get('hub.challenge') ?? '',
+        },
+        env.WHATSAPP_VERIFY_TOKEN,
+      );
+
+      return new Response(body, {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' },
+      });
+    }
 
     // Assuming post is called on a POST request to your server
     async function post(api: WhatsAppAPI, request: Request): Promise<Response> {
@@ -228,7 +238,7 @@ export default {
     if (pathname === '/webhook') {
       switch (request.method) {
         case 'GET':
-          return get(Whatsapp, request);
+          return get(request);
         case 'POST':
           return await post(Whatsapp, request);
         default:
