@@ -159,10 +159,7 @@ export async function markAsRead(
   return await (await promise).json();
 }
 
-export function getWebhook(params: GetParams, verifyToken?: string) {
-  if (!verifyToken) {
-    throw new Error('WhatsAppAPIMissingVerifyTokenError');
-  }
+export function getWebhook(params: GetParams, verifyToken: string) {
   const { 'hub.mode': mode, 'hub.verify_token': token, 'hub.challenge': challenge } = params;
   if (!mode || !token) {
     throw new Error('WhatsAppAPIMissingSearchParamsError');
