@@ -4,7 +4,8 @@
   "description": "This is a simple translator WhatsApp bot built with CloudFlare Workers and TypeScript",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check": "pnpm run --recursive check",
+    "test": "pnpm run --recursive test"
   },
   "keywords": [
     "cloudflare",
