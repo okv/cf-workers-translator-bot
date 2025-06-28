@@ -107,8 +107,7 @@ async function postWebhook(
       );
     }
   }
-  // TODO: set response status code to 200
-  throw new Error('WhatsAppAPIUnexpectedError: Unexpected payload: 200');
+  console.warn('WhatsAppAPIUnexpectedError: Unexpected payload: 200', { value });
 }
 
 async function sendMessage(
