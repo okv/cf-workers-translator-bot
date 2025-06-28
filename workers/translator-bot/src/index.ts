@@ -1,5 +1,6 @@
-import { Text } from './message-types';
+import { Text } from 'whatsapp-api-js/messages';
 import type { PostData, ServerMessageTypes, GetParams } from './types';
+import { ClientMessage } from './types';
 
 async function apiFetch(url: string, token: string, options: RequestInit = {}): Promise<Response> {
   console.log('apiFetch sending request:', { url });
@@ -13,10 +14,6 @@ async function apiFetch(url: string, token: string, options: RequestInit = {}): 
 }
 
 const API_VERSION = 'v23.0';
-
-interface WhatsAppMessage {
-  _type: string;
-}
 
 interface WhatsAppRequest {
   messaging_product: string;
@@ -113,7 +110,7 @@ async function sendMessage(
   token: string,
   phoneID: string,
   to: string,
-  message: WhatsAppMessage,
+  message: ClientMessage,
   context?: string,
 ) {
   const type = message._type;
