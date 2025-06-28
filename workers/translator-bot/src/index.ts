@@ -1,4 +1,3 @@
-import { WhatsAppAPI } from 'whatsapp-api-js';
 import { Text } from 'whatsapp-api-js/messages';
 import type { PostData, ServerMessageTypes, GetParams } from './types';
 
@@ -175,13 +174,6 @@ export default {
   async fetch(request: Request, env, ctx): Promise<Response> {
     const TOKEN = env.WHATSAPP_TOKEN;
 
-    const Whatsapp = new WhatsAppAPI({
-      token: TOKEN,
-      appSecret: env.WHATSAPP_APP_SECRET,
-      webhookVerifyToken: env.WHATSAPP_VERIFY_TOKEN,
-      v: 'v23.0',
-    });
-
     // Assuming get is called on a GET request to your server
     function get(request: Request): Response {
       const { searchParams } = new URL(request.url);
@@ -201,7 +193,7 @@ export default {
     }
 
     // Assuming post is called on a POST request to your server
-    async function post(api: WhatsAppAPI, request: Request): Promise<Response> {
+    async function post(request: Request): Promise<Response> {
       const requestBody: string = await request.text();
 
       const responseBody = await postWebhook(
@@ -251,10 +243,6 @@ export default {
       markAsRead(TOKEN, phoneID, message.id);
     }
 
-    Whatsapp.on.sent = async ({ phoneID, to, message }) => {
-      console.log(`Bot ${phoneID} sent to user ${to} ${message}`);
-    };
-
     const url: URL = new URL(request.url);
     const { pathname } = url;
     if (pathname === '/webhook') {
@@ -262,7 +250,7 @@ export default {
         case 'GET':
           return get(request);
         case 'POST':
-          return await post(Whatsapp, request);
+          return await post(request);
         default:
           return new Response('Not Found');
       }
