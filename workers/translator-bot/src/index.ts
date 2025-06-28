@@ -136,6 +136,27 @@ async function sendMessage(
   return response;
 }
 
+async function markAsRead(
+  token: string,
+  phoneID: string,
+  messageId: string,
+  indicator?: string,
+): Promise<object> {
+  const promise = apiFetch(`https://graph.facebook.com/${API_VERSION}/${phoneID}/messages`, token, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      messaging_product: 'whatsapp',
+      status: 'read',
+      message_id: messageId,
+      typing_indicator: indicator ? { type: indicator } : void 0,
+    }),
+  });
+  return await (await promise).json();
+}
+
 function getWebhook(params: GetParams, verifyToken?: string) {
   if (!verifyToken) {
     throw new Error('WhatsAppAPIMissingVerifyTokenError');
@@ -226,7 +247,7 @@ export default {
             'all the other media types.',
       );
 
-      Whatsapp.markAsRead(phoneID, message.id);
+      markAsRead(TOKEN, phoneID, message.id);
     }
 
     Whatsapp.on.sent = async ({ phoneID, to, message }) => {
