@@ -5,7 +5,9 @@
 	"scripts": {
 		"cf": "wrangler",
 		"cf:typegen": "wrangler types",
+		"check": "pnpm check:format && pnpm check:types",
 		"check:format": "prettier . --check",
+		"check:types": "tsc --noEmit",
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
 		"format": "prettier . --write",
