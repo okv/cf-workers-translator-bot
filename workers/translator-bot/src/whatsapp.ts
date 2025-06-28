@@ -38,9 +38,8 @@ function escapeUnicode(str: string): string {
 async function verifyRequestSignature(
   raw_body: string,
   signature: string,
-  appSecret?: string,
+  appSecret: string,
 ): Promise<boolean> {
-  if (!appSecret) throw new Error('WhatsAppAPIMissingAppSecretError');
   const { subtle } = crypto;
   if (!subtle) throw new Error('WhatsAppAPIMissingCryptoSubtleError');
   signature = signature.split('sha256=')[1];
