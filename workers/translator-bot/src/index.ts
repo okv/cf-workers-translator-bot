@@ -1,4 +1,4 @@
-import { Text } from 'whatsapp-api-js/messages';
+import { Text } from './message-types';
 import type { PostData, ServerMessageTypes, GetParams } from './types';
 
 async function apiFetch(url: string, token: string, options: RequestInit = {}): Promise<Response> {

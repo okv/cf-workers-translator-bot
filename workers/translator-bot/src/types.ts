@@ -392,3 +392,25 @@ export type GetParams = {
   'hub.verify_token': string;
   'hub.challenge': string;
 };
+
+export type ClientMessageNames =
+  | 'text'
+  | 'audio'
+  | 'document'
+  | 'image'
+  | 'sticker'
+  | 'video'
+  | 'location'
+  | 'contacts'
+  | 'interactive'
+  | 'template'
+  | 'reaction';
+
+export declare abstract class ClientMessage {
+  /**
+   * The message type
+   *
+   * @internal
+   */
+  abstract get _type(): ClientMessageNames;
+}
