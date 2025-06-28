@@ -59,12 +59,13 @@ async function postWebhook(
   data: PostData,
   raw_body: string,
   signature: string,
+  appSecret: string,
   onMessage?: Function,
   onStatus?: Function,
 ) {
   if (!raw_body) throw new Error('WhatsAppAPIMissingRawBodyError');
   if (!signature) throw new Error('WhatsAppAPIMissingSignatureError');
-  if (!(await verifyRequestSignature(raw_body, signature))) {
+  if (!(await verifyRequestSignature(raw_body, signature, appSecret))) {
     throw new Error('WhatsAppAPIFailedToVerifyError');
   }
   if (!data.object) {
@@ -208,6 +209,7 @@ export default {
         JSON.parse(requestBody),
         requestBody,
         request.headers.get('x-hub-signature-256') ?? '',
+        env.WHATSAPP_APP_SECRET,
         onMessage,
       );
       return new Response(responseBody ?? '');
