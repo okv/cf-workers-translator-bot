@@ -1,4 +1,4 @@
-import { ServerMessageTypesPatched, getWebhook, postWebhook } from './whatsapp';
+import { ServerMessageTypesPatched, getWebhook, postWebhook } from 'whatsapp';
 import { messageHandler } from './mhandler';
 
 export default {

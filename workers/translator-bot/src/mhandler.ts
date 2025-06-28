@@ -1,4 +1,4 @@
-import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from './whatsapp';
+import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
 
 export async function messageHandler(
   phoneID: string,
