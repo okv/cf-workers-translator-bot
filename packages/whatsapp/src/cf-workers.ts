@@ -2,6 +2,12 @@ import { ServerMessageTypesPatched, postWebhook, getWebhook } from './whatsapp-a
 
 export function getHandler(verifyToken: string, request: Request): Response {
   const { searchParams } = new URL(request.url);
+  const mode = searchParams.get('hub.mode');
+  if (mode !== 'subscribe') {
+    throw new Error(`This mode is not supported: ${mode}`);
+
+  }
+
   const body = getWebhook(
     {
       'hub.mode': 'subscribe',
