@@ -2,7 +2,7 @@
   "name": "whatsapp",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "check": "pnpm check:format && pnpm check:types",
     "check:format": "prettier . --check",
