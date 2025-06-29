@@ -10,7 +10,7 @@ export async function onMessage(
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
-  const text = `Hey ${name}, I'm a bot and I cannot do much yet, but I'll learn 😉`;
+  const text = `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 I cannot do much yet, but I'll improve 😉`;
   const response = await sendMessage(token, phoneID, from, new Text(text));
 
   console.log('Response from sendMessage', { response });
