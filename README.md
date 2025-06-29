@@ -1,8 +1,8 @@
-# cf-workers-translator-bot
+# CloudFlare Workers Translator Bot
 
-This is a simple translator WhatsApp bot built with CloudFlare Workers and TypeScript.
+This is a simple translator **WhatsApp** bot built with **CloudFlare Workers** and **TypeScript**.
 
-Check out the [translator bot worker](/workers/translator/) to see what it can do and how it does it :smiley:.
+Check out the [translator bot worker](/workers/translator-bot/) to see what it can do and how it does it :smiley:.
 
 
 ## Prerequisites
