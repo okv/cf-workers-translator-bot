@@ -18,3 +18,11 @@ graph LR
 The worker itself tries to do as less as possible and uses the following libraries:
 
 - [packages/whatsapp](/packages/whatsapp/) to receive and send whats messages.
+
+
+## Features
+
+The bot can:
+
+- Receive a message and say hi :wave: back :tada:
+- For now that would be it :smiley:
