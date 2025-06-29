@@ -7,17 +7,11 @@ export default {
     const { pathname } = url;
 
     if (pathname === '/webhook') {
-      const {
-        WHATSAPP_TOKEN: token,
-        WHATSAPP_APP_SECRET: appSecret,
-        WHATSAPP_VERIFY_TOKEN: verifyToken,
-      } = env;
-
       switch (request.method) {
         case 'GET':
-          return getHandler(verifyToken, request);
+          return getHandler(env.WHATSAPP_VERIFY_TOKEN, request);
         case 'POST':
-          return await postHandler(token, appSecret, request, onMessage);
+          return await postHandler(env.WHATSAPP_TOKEN, env.WHATSAPP_APP_SECRET, request, onMessage);
       }
     }
 
