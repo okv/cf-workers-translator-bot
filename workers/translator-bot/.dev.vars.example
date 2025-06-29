@@ -1,0 +1,3 @@
+WHATSAPP_TOKEN="token"
+WHATSAPP_APP_SECRET="app-secret"
+WHATSAPP_VERIFY_TOKEN="verify-token"

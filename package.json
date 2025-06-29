@@ -4,9 +4,8 @@
   "description": "This is a simple translator WhatsApp bot built with CloudFlare Workers and TypeScript",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "wr": "wrangler",
-    "wrangler": "wrangler"
+    "check": "pnpm run --recursive check",
+    "test": "pnpm run --recursive test"
   },
   "keywords": [
     "cloudflare",
@@ -16,8 +15,5 @@
   ],
   "author": "Oleg Korobenko <oleg.korobenko@gmail.com>",
   "license": "MIT",
-  "packageManager": "pnpm@10.12.3",
-  "devDependencies": {
-    "wrangler": "^4.22.0"
-  }
+  "packageManager": "pnpm@10.12.3"
 }

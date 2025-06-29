@@ -1,0 +1,1 @@
+../../workers/translator-bot/worker-configuration.d.ts
