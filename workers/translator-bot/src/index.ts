@@ -12,11 +12,6 @@ export default {
         WHATSAPP_APP_SECRET: appSecret,
         WHATSAPP_VERIFY_TOKEN: verifyToken,
       } = env;
-      console.log('Config info', {
-        tokenLength: token.length,
-        appSecretLength: appSecret.length,
-        verifyTokenLength: verifyToken.length,
-      });
 
       switch (request.method) {
         case 'GET':

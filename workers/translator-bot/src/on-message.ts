@@ -10,31 +10,10 @@ export async function onMessage(
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
-  let response;
+  const text = `Hey ${name}, I'm a bot and I cannot do much yet, but I'll learn 😉`;
+  const response = await sendMessage(token, phoneID, from, new Text(text));
 
-  if (['text', 'image', 'document'].includes(message.type)) {
-    let content = '';
-    switch (message.type) {
-      case 'text':
-        content = `*${name}* said:\n\n${message.text.body}`;
-        break;
-      case 'image':
-        content = `*${name}* shared:\n\n an image with ID ${message.image.id}`;
-        break;
-      case 'document':
-        content = `*${name}* shared:\n\n an document with ID ${message.document.id}`;
-        break;
-    }
-
-    response = await sendMessage(token, phoneID, from, new Text(content));
-  }
-
-  console.log(
-    response ??
-      'There are more types of messages, such as contacts, ' +
-        'locations, templates, interactive, reactions and ' +
-        'all the other media types.',
-  );
+  console.log('Response from sendMessage', { response });
 
   markAsRead(token, phoneID, message.id);
 }
