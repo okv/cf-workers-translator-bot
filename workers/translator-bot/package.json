@@ -5,7 +5,6 @@
   "scripts": {
     "cf": "wrangler",
     "cf:typegen": "wrangler types",
-    "ct": "pnpm check && pnpm test && echo '>>> FORMATTING AND TESTS ARE OK <<<'",
     "check": "pnpm check:format && pnpm check:types",
     "check:format": "prettier . --check",
     "check:types": "tsc --noEmit",
