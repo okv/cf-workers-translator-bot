@@ -10,6 +10,12 @@ importers:
 
   packages/whatsapp:
     devDependencies:
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      typescript:
+        specifier: ^5.5.2
+        version: 5.8.3
       whatsapp-api-js:
         specifier: 5.3.0
         version: 5.3.0
