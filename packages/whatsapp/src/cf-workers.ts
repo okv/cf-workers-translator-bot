@@ -30,7 +30,6 @@ export async function postHandler(
     requestBody,
     request.headers.get('x-hub-signature-256') ?? '',
     appSecret,
-    onMessage,
     function onWhatsAppMessage(
       phoneID: string,
       from: string,

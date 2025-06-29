@@ -1,5 +1,4 @@
 import { PostData, GetParams, ClientMessage, ServerMessageTypes } from 'whatsapp-api-js/types';
-// Reexporting some types to import everything from one place
 export { Text } from 'whatsapp-api-js/messages';
 
 export type ServerMessageBase = {
@@ -12,7 +11,10 @@ const API_VERSION = 'v23.0';
 
 // TODO: use path instead of url
 async function apiFetch(url: string, token: string, options: RequestInit = {}): Promise<Response> {
-  console.log('apiFetch sending request:', { url });
+  if (!token) {
+    console.warn('No token while sending request with apiFetch!');
+  }
+  console.log('Sending request with apiFetch', { apiFetch: { url } });
   return fetch(url, {
     ...options,
     headers: {
