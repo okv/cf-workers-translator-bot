@@ -19,7 +19,6 @@ The worker itself tries to do as less as possible and uses the following librari
 
 - [packages/whatsapp](/packages/whatsapp/) to receive and send whats messages.
 
-
 ## Features
 
 The bot can:
