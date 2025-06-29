@@ -17,7 +17,7 @@ graph LR
 
 The worker itself tries to do as less as possible and uses the following libraries:
 
-- [packages/whatsapp](/packages/whatsapp/) to receive and send whats messages.
+- [packages/whatsapp](/packages/whatsapp/) to receive and send WhatsApp messages.
 
 ## Features
 
