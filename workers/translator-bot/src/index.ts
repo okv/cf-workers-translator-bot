@@ -1,5 +1,5 @@
 import { getHandler, postHandler } from 'whatsapp';
-import { messageHandler } from './mhandler';
+import { onMessage } from './on-message';
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -11,12 +11,7 @@ export default {
         case 'GET':
           return getHandler(env.WHATSAPP_VERIFY_TOKEN, request);
         case 'POST':
-          return await postHandler(
-            env.WHATSAPP_TOKEN,
-            env.WHATSAPP_APP_SECRET,
-            request,
-            messageHandler,
-          );
+          return await postHandler(env.WHATSAPP_TOKEN, env.WHATSAPP_APP_SECRET, request, onMessage);
       }
     }
 

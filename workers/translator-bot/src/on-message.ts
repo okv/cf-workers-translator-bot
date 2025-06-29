@@ -1,6 +1,6 @@
 import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
 
-export async function messageHandler(
+export async function onMessage(
   phoneID: string,
   from: string,
   message: ServerMessageTypesPatched,
