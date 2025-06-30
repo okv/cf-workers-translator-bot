@@ -1,0 +1,1 @@
+../../shared/env/worker-configuration.d.ts
