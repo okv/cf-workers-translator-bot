@@ -1,5 +1,5 @@
 import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
-import { parseBotCommand, execTranslate } from './bot-command';
+import { parseBotCommand, execWelcome, execUnrecognized, execTranslate } from './bot-command';
 
 export async function onMessage(
   phoneID: string,
@@ -11,17 +11,24 @@ export async function onMessage(
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
-  const welcomeText = `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 just drop me a message like "translate katzen sind super" to get it translated into English 🇬🇧`;
-  let replyText = welcomeText;
+  let replyText = await execWelcome(name);
 
   if (message.type === 'text') {
     const command = parseBotCommand(message.text.body);
-    if (command.name === 'translate') {
-      if (command?.args?.length) {
-        replyText = await execTranslate(command.args);
-      } else {
-        replyText = 'There is nothing to translate';
-      }
+    switch (command.name) {
+      case 'welcome':
+        replyText = await execWelcome(name);
+        break;
+      case 'unregonized':
+        replyText = await execUnrecognized(command.args ?? []);
+        break;
+      case 'translate':
+        if (command?.args?.length) {
+          replyText = await execTranslate(command.args);
+        } else {
+          replyText = 'There is nothing to translate';
+        }
+        break;
     }
   }
 
