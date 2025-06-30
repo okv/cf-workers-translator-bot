@@ -8,6 +8,15 @@ importers:
 
   .: {}
 
+  packages/translator:
+    devDependencies:
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      typescript:
+        specifier: ^5.5.2
+        version: 5.8.3
+
   packages/whatsapp:
     devDependencies:
       prettier:
@@ -22,6 +31,9 @@ importers:
 
   workers/translator-bot:
     dependencies:
+      translator:
+        specifier: workspace:*
+        version: link:../../packages/translator
       whatsapp:
         specifier: workspace:*
         version: link:../../packages/whatsapp

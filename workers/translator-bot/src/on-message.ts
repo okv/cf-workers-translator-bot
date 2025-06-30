@@ -1,4 +1,22 @@
 import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
+import { translateText } from 'translator';
+
+type BotCommand = {
+  name: 'unregonized' | 'translate';
+  args?: string[];
+};
+
+function parseCommand(text: string): BotCommand {
+  const words: string[] = text
+    .trim()
+    .split(' ')
+    .map((str) => str.trim());
+  const name = words.shift();
+  return {
+    name: name === 'translate' ? 'translate' : 'unregonized',
+    args: words,
+  };
+}
 
 export async function onMessage(
   phoneID: string,
@@ -10,8 +28,17 @@ export async function onMessage(
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
-  const text = `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 I cannot do much yet, but I'll improve 😉`;
-  const response = await sendMessage(token, phoneID, from, new Text(text));
+  const welcomeText = `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 just drop me a message like "translate katzen sind super" to get it translated into English 🇬🇧`;
+  let replyText = welcomeText;
+
+  if (message.type === 'text') {
+    const command = parseCommand(message.text.body);
+    if (command.name === 'translate' && command?.args?.length) {
+      replyText = await translateText(command.args.join(' '), 'en', { apiKey: '123' });
+    }
+  }
+
+  const response = await sendMessage(token, phoneID, from, new Text(replyText));
 
   console.log('Response from sendMessage', { response });
 
