@@ -1,22 +1,5 @@
 import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
-import { translateText } from 'translator';
-
-type BotCommand = {
-  name: 'unregonized' | 'translate';
-  args?: string[];
-};
-
-function parseCommand(text: string): BotCommand {
-  const words: string[] = text
-    .trim()
-    .split(' ')
-    .map((str) => str.trim());
-  const name = words.shift();
-  return {
-    name: name === 'translate' ? 'translate' : 'unregonized',
-    args: words,
-  };
-}
+import { parseBotCommand, execTranslate } from './bot-command';
 
 export async function onMessage(
   phoneID: string,
@@ -32,9 +15,13 @@ export async function onMessage(
   let replyText = welcomeText;
 
   if (message.type === 'text') {
-    const command = parseCommand(message.text.body);
-    if (command.name === 'translate' && command?.args?.length) {
-      replyText = await translateText(command.args.join(' '), 'en', { apiKey: '123' });
+    const command = parseBotCommand(message.text.body);
+    if (command.name === 'translate') {
+      if (command?.args?.length) {
+        replyText = await execTranslate(command.args);
+      } else {
+        replyText = 'There is nothing to translate';
+      }
     }
   }
 
