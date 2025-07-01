@@ -5,6 +5,34 @@ export type BotCommand = {
   args?: string[];
 };
 
+export type UserInfo = {
+  name: string;
+};
+
+export async function execMessageCommand(
+  messageText: string,
+  user: UserInfo,
+): Promise<string | undefined> {
+  const command = parseBotCommand(messageText);
+  let replyText;
+  switch (command.name) {
+    case 'welcome':
+      replyText = await execWelcome(user.name);
+      break;
+    case 'unregonized':
+      replyText = await execUnrecognized(command.args ?? []);
+      break;
+    case 'translate':
+      if (command?.args?.length) {
+        replyText = await execTranslate(command.args);
+      } else {
+        replyText = 'There is nothing to translate ¯\_(ツ)_/¯';
+      }
+      break;
+  }
+  return replyText;
+}
+
 const commandsMap: Map<string, BotCommand['name']> = new Map([
   ['@hi', 'welcome'],
   ['hi', 'welcome'],
@@ -20,10 +48,11 @@ export function parseBotCommand(text: string): BotCommand {
     .trim()
     .split(' ')
     .map((str) => str.trim());
-  const cmd = words.shift();
+  const firstWord = words.slice().shift();
+  const commandName = commandsMap.get(firstWord ?? '') ?? 'unregonized';
   return {
-    name: commandsMap.get(cmd ?? '') ?? 'unregonized',
-    args: words,
+    name: commandName,
+    args: commandName === 'unregonized' ? words : words.slice(1),
   };
 }
 
@@ -32,11 +61,16 @@ export async function execWelcome(name: string): Promise<string> {
 }
 
 export async function execUnrecognized(args: string[]): Promise<string> {
-  const translation = await translateText(args.join(' '), 'en', { apiKey: '123' });
   return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with @hi 😉`;
 }
 
 export async function execTranslate(args: string[]): Promise<string> {
-  const translation = await translateText(args.join(' '), 'en', { apiKey: '123' });
-  return `This means "${translation}"`;
+  const text = args.join(' ');
+  const [translation] = await translateText(text, 'en', { apiKey: '123' });
+
+  if (translation) {
+    return `"${translation.text}" means "${translation.translatedText}" in "${translation.fromLang}" 💡`;
+  } else {
+    return `I don't know what "${text}" means, sorry 😢`;
+  }
 }

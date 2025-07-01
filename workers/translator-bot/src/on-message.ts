@@ -1,5 +1,5 @@
 import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
-import { parseBotCommand, execWelcome, execUnrecognized, execTranslate } from './bot-command';
+import { execMessageCommand } from './bot-command';
 
 export async function onMessage(
   phoneID: string,
@@ -11,25 +11,16 @@ export async function onMessage(
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
-  let replyText = await execWelcome(name);
+  let replyText: string | undefined;
 
   if (message.type === 'text') {
-    const command = parseBotCommand(message.text.body);
-    switch (command.name) {
-      case 'welcome':
-        replyText = await execWelcome(name);
-        break;
-      case 'unregonized':
-        replyText = await execUnrecognized(command.args ?? []);
-        break;
-      case 'translate':
-        if (command?.args?.length) {
-          replyText = await execTranslate(command.args);
-        } else {
-          replyText = 'There is nothing to translate';
-        }
-        break;
-    }
+    replyText = await execMessageCommand(message.text.body, { name });
+  } else {
+    replyText = `I can only process text messages, don't know how what to do with "${message.type}" messages, sorry.`;
+  }
+
+  if (!replyText) {
+    replyText = `Hm... I'm not sure what you mean by that, shall we maybe start with @hi?`;
   }
 
   const response = await sendMessage(token, phoneID, from, new Text(replyText));
