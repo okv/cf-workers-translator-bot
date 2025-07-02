@@ -1,4 +1,14 @@
-import { PostData, GetParams, ClientMessage, ServerMessageTypes } from 'whatsapp-api-js/types';
+import {
+  PostData,
+  GetParams,
+  ClientMessage,
+  ServerMessageTypes,
+  ServerStatus,
+  ServerPricing,
+  ServerError,
+  ServerConversation,
+} from 'whatsapp-api-js/types';
+export type { ServerStatus } from 'whatsapp-api-js/types';
 export { Text } from 'whatsapp-api-js/messages';
 
 export type ServerMessageBase = {
@@ -59,14 +69,33 @@ async function verifyRequestSignature(
   return signature === check;
 }
 
+export type MessageMetadata = {
+  phoneID: string;
+  from: string;
+  data: object;
+  name?: string;
+};
+
+export type StatusMetadata = {
+  phoneID: string;
+  phone: string;
+  id: string;
+  timestamp: string;
+  conversation?: ServerConversation;
+  pricing?: ServerPricing;
+  error?: ServerError;
+  biz_opaque_callback_data?: string;
+  data: object;
+};
+
 export async function postWebhook(
   data: PostData,
   raw_body: string,
   signature: string,
   appSecret: string,
-  onMessage?: Function,
-  onStatus?: Function,
-) {
+  onMessage?: (message: ServerMessageTypesPatched, metadata: MessageMetadata) => Promise<void>,
+  onStatus?: (status: ServerStatus, metadata: StatusMetadata) => Promise<void>,
+): Promise<void> {
   if (!raw_body) throw new Error('WhatsAppAPIMissingRawBodyError');
   if (!signature) throw new Error('WhatsAppAPIMissingSignatureError');
   if (!(await verifyRequestSignature(raw_body, signature, appSecret))) {
@@ -84,7 +113,7 @@ export async function postWebhook(
     const from = contact?.wa_id ?? message.from;
     const name = contact?.profile.name;
     if (onMessage) {
-      return onMessage(phoneID, from, message, name, data);
+      return onMessage(message, { phoneID, from, name, data });
     }
   } else if ('statuses' in value) {
     const statuses = value.statuses[0];
@@ -97,10 +126,9 @@ export async function postWebhook(
     const error = statuses.errors?.[0];
     const biz_opaque_callback_data = statuses.biz_opaque_callback_data;
     if (onStatus) {
-      return onStatus(
+      return onStatus(status, {
         phoneID,
         phone,
-        status,
         id,
         timestamp,
         conversation,
@@ -108,7 +136,7 @@ export async function postWebhook(
         error,
         biz_opaque_callback_data,
         data,
-      );
+      });
     }
   }
   console.warn('WhatsAppAPIUnexpectedError: Unexpected payload: 200', { value });

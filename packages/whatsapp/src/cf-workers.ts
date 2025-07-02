@@ -1,4 +1,11 @@
-import { ServerMessageTypesPatched, postWebhook, getWebhook } from './whatsapp-api-js';
+import {
+  ServerMessageTypesPatched,
+  ServerStatus,
+  MessageMetadata,
+  StatusMetadata,
+  postWebhook,
+  getWebhook,
+} from './whatsapp-api-js';
 
 export function getHandler(verifyToken: string, request: Request): Response {
   const { searchParams } = new URL(request.url);
@@ -23,10 +30,10 @@ export function getHandler(verifyToken: string, request: Request): Response {
 }
 
 export async function postHandler(
-  token: string,
   appSecret: string,
   request: Request,
-  onMessage: Function,
+  onMessage?: (message: ServerMessageTypesPatched, metadata: MessageMetadata) => Promise<void>,
+  onStatus?: (status: ServerStatus, metadata: StatusMetadata) => Promise<void>,
 ): Promise<Response> {
   const requestBody: string = await request.text();
 
@@ -35,15 +42,8 @@ export async function postHandler(
     requestBody,
     request.headers.get('x-hub-signature-256') ?? '',
     appSecret,
-    function onWhatsAppMessage(
-      phoneID: string,
-      from: string,
-      message: ServerMessageTypesPatched,
-      name: string,
-      data: object,
-    ) {
-      return onMessage(phoneID, from, message, name, data, token);
-    },
+    onMessage,
+    onStatus,
   );
   return new Response(responseBody ?? '');
 }

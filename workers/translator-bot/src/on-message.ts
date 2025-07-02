@@ -1,15 +1,19 @@
-import { ServerMessageTypesPatched, Text, sendMessage, markAsRead } from 'whatsapp';
+import {
+  ServerMessageTypesPatched,
+  MessageMetadata,
+  Text,
+  sendMessage,
+  markAsRead,
+} from 'whatsapp';
 import { execMessageCommand } from './bot-command';
 
-export async function onMessage(
-  phoneID: string,
-  from: string,
-  message: ServerMessageTypesPatched,
-  name: string,
-  data: object,
-  token: string,
-  env: Env,
-) {
+export type AppMessageMetadata = MessageMetadata & {
+  whatsappToken: string;
+  translationApiKey: string;
+};
+
+export async function onMessage(message: ServerMessageTypesPatched, metadata: AppMessageMetadata) {
+  const { name, from, phoneID, translationApiKey } = metadata;
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
   let replyText: string | undefined;
@@ -17,10 +21,8 @@ export async function onMessage(
   if (message.type === 'text') {
     replyText = await execMessageCommand(
       message.text.body,
-      { name },
-      {
-        translationApiKey: env.TRANSLATION_API_KEY,
-      },
+      { name: metadata.name ?? 'my friend' },
+      { translationApiKey },
     );
   } else {
     replyText = `I can only process text messages, don't know how what to do with "${message.type}" messages, sorry.`;
@@ -30,9 +32,9 @@ export async function onMessage(
     replyText = `Hm... I'm not sure what you mean by that, shall we maybe start with @hi?`;
   }
 
-  const response = await sendMessage(token, phoneID, from, new Text(replyText));
-
+  const { whatsappToken } = metadata;
+  const response = await sendMessage(whatsappToken, phoneID, from, new Text(replyText));
   console.log('Response from sendMessage', { response });
 
-  markAsRead(token, phoneID, message.id);
+  markAsRead(whatsappToken, phoneID, message.id);
 }

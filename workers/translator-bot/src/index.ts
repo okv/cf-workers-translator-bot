@@ -1,4 +1,4 @@
-import { getHandler, postHandler, ServerMessageTypesPatched } from 'whatsapp';
+import { getHandler, postHandler } from 'whatsapp';
 import { onMessage } from './on-message';
 
 export default {
@@ -18,21 +18,13 @@ export default {
         case 'GET':
           return getHandler(verifyToken, request);
         case 'POST':
-          return await postHandler(
-            token,
-            appSecret,
-            request,
-            (
-              phoneID: string,
-              from: string,
-              message: ServerMessageTypesPatched,
-              name: string,
-              data: object,
-              token: string,
-            ) => {
-              return onMessage(phoneID, from, message, name, data, token, env);
-            },
-          );
+          return await postHandler(appSecret, request, (message, metadata) => {
+            return onMessage(message, {
+              ...metadata,
+              whatsappToken: token,
+              translationApiKey,
+            });
+          });
       }
     }
 
