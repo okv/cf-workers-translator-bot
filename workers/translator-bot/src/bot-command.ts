@@ -9,9 +9,14 @@ export type UserInfo = {
   name: string;
 };
 
+export type CommandsParams = {
+  translationApiKey: string;
+};
+
 export async function execMessageCommand(
   messageText: string,
   user: UserInfo,
+  commandsParams: CommandsParams,
 ): Promise<string | undefined> {
   const command = parseBotCommand(messageText);
   let replyText;
@@ -24,7 +29,7 @@ export async function execMessageCommand(
       break;
     case 'translate':
       if (command?.args?.length) {
-        replyText = await execTranslate(command.args);
+        replyText = await execTranslate(command.args, commandsParams);
       } else {
         replyText = 'There is nothing to translate ¯\_(ツ)_/¯';
       }
@@ -64,9 +69,14 @@ export async function execUnrecognized(args: string[]): Promise<string> {
   return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with @hi 😉`;
 }
 
-export async function execTranslate(args: string[]): Promise<string> {
+export async function execTranslate(
+  args: string[],
+  commandsParams: CommandsParams,
+): Promise<string> {
   const text = args.join(' ');
-  const [translation] = await translateText(text, 'en', { apiKey: '123' });
+  const [translation] = await translateText(text, 'en', {
+    apiKey: commandsParams.translationApiKey,
+  });
 
   if (translation) {
     return `"${translation.text}" means "${translation.translatedText}" in "${translation.fromLang}" 💡`;

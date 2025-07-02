@@ -8,13 +8,20 @@ export async function onMessage(
   name: string,
   data: object,
   token: string,
+  env: Env,
 ) {
   console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
   let replyText: string | undefined;
 
   if (message.type === 'text') {
-    replyText = await execMessageCommand(message.text.body, { name });
+    replyText = await execMessageCommand(
+      message.text.body,
+      { name },
+      {
+        translationApiKey: env.TRANSLATION_API_KEY,
+      },
+    );
   } else {
     replyText = `I can only process text messages, don't know how what to do with "${message.type}" messages, sorry.`;
   }
