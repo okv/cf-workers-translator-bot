@@ -1,12 +1,23 @@
 export type TranslateOptions = {
   apiKey: string;
   fromLang?: string;
+  fetch?: (
+    input: RequestInfo | URL,
+    init?: RequestInit<RequestInitCfProperties>,
+  ) => Promise<Response>;
 };
 
 export type Translation = {
   text: string;
   fromLang: string;
   translatedText: string;
+};
+
+export type RequestInitCfPropertiesExtended = RequestInitCfProperties & {
+  fetch?: (
+    input: RequestInfo | URL,
+    init?: RequestInit<RequestInitCfProperties>,
+  ) => Promise<Response>;
 };
 
 const TRANSLATION_API_URL = 'https://translation.googleapis.com/language/translate/v2';
@@ -25,9 +36,10 @@ export type GoogleAPITranslateTextResponse = {
 async function fetchGoogleAPI(
   url: string,
   apiKey: string,
-  options?: RequestInitCfProperties,
+  options?: RequestInitCfPropertiesExtended,
 ): Promise<Response> {
-  return fetch(url, {
+  const request = options?.fetch ?? fetch;
+  return request(url, {
     headers: Object.assign(
       {
         'X-goog-api-key': apiKey,
@@ -54,7 +66,9 @@ export async function translateText(
     ['format', 'text'],
   ]);
   const url = `${TRANSLATION_API_URL}?${params}`;
-  const response = await fetchGoogleAPI(url, options.apiKey);
+  const response = await fetchGoogleAPI(url, options.apiKey, {
+    fetch: options.fetch,
+  });
 
   if (response.ok) {
     const body = (await response.json()) as GoogleAPITranslateTextResponse;

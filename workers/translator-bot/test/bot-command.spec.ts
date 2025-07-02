@@ -1,5 +1,4 @@
-import { env } from 'cloudflare:test';
-import { beforeAll, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { execMessageCommand } from '../src/bot-command';
 import { translateText } from 'translator';
 
