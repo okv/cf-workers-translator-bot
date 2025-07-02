@@ -7,5 +7,15 @@ It uses [Google Cloud Basic Translation API](https://cloud.google.com/translate/
 A usage of this package would be:
 
 ```ts
+import { translateText } from 'translator';
 
+const [translation] = await translateText(text, 'en', {
+  apiKey: commandsParams.translationApiKey,
+});
+
+if (translation) {
+  return `"${translation.text}" means "${translation.translatedText}" in "${translation.fromLang}" 💡`;
+} else {
+  return `I don't know what "${text}" means, sorry 😢`;
+}
 ```
