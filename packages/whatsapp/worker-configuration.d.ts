@@ -1,1 +1,1 @@
-../../workers/translator-bot/worker-configuration.d.ts
+../../shared/env/worker-configuration.d.ts
