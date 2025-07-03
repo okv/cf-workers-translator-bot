@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { execMessageCommand } from '../src/bot-command';
+import { execMessageCommand, stripCommandSpaces } from '../src/bot-command';
 import { translateText } from 'translator';
 
 const user = {
@@ -13,8 +13,8 @@ const commandsParams = {
 vi.mock('translator');
 
 describe('bot-command#execMessageCommand', () => {
-  it('should welcome when the message is @hi', async () => {
-    const replyText = await execMessageCommand('hi', user, commandsParams);
+  it('should welcome when the message is "hi"', async () => {
+    const replyText = await execMessageCommand('!hi', user, commandsParams);
     expect(replyText).toMatch(/^Hey test-user123, I'm a translator bot/);
   });
 
@@ -32,12 +32,29 @@ describe('bot-command#execMessageCommand', () => {
       },
     ]);
 
-    const replyText = await execMessageCommand('@trans katzen', user, commandsParams);
+    const replyText = await execMessageCommand('!translate katzen', user, commandsParams);
     expect(replyText).toMatch(/^"katzen" means "cats" in "de"/);
   });
 
   it('should put it straight when there is nothing translate', async () => {
-    const replyText = await execMessageCommand('@trans', user, commandsParams);
+    const replyText = await execMessageCommand('!translate', user, commandsParams);
     expect(replyText).toMatch(/^There is nothing to translate/);
+  });
+});
+
+describe('bot-command#stripCommandSpaces', () => {
+  it('should strip one space', () => {
+    const stripped = stripCommandSpaces('! translate some text');
+    expect(stripped).toBe('!translate some text');
+  });
+
+  it('should strip multiple space', () => {
+    const stripped = stripCommandSpaces('!   translate some text');
+    expect(stripped).toBe('!translate some text');
+  });
+
+  it('should do nothing when there are no spaces', () => {
+    const stripped = stripCommandSpaces('!translate some text');
+    expect(stripped).toBe('!translate some text');
   });
 });

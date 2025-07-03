@@ -39,17 +39,24 @@ export async function execMessageCommand(
 }
 
 const commandsMap: Map<string, BotCommand['name']> = new Map([
-  ['@hi', 'welcome'],
+  ['!hi', 'welcome'],
   ['hi', 'welcome'],
-  ['@hello', 'welcome'],
+  ['!hello', 'welcome'],
   ['hello', 'welcome'],
-  ['@translate', 'translate'],
-  ['@trans', 'translate'],
-  ['@tr', 'translate'],
+  ['!translate', 'translate'],
+  ['!trans', 'translate'],
+  ['!tr', 'translate'],
 ]);
 
+/**
+ * This turns a message "! translate something" into "!translate something"
+ */
+export function stripCommandSpaces(text: string) {
+  return text.trimStart().replace(/!\s+/, '!');
+}
+
 export function parseBotCommand(text: string): BotCommand {
-  const words: string[] = text
+  const words: string[] = stripCommandSpaces(text)
     .trim()
     .split(' ')
     .map((str) => str.trim());
