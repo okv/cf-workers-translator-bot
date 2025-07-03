@@ -1,7 +1,7 @@
 import { translateText } from 'translator';
 
 export type BotCommand = {
-  name: 'welcome' | 'unregonized' | 'translate';
+  name: 'welcome' | 'unrecognized' | 'translate';
   args?: string[];
 };
 
@@ -24,7 +24,7 @@ export async function execMessageCommand(
     case 'welcome':
       replyText = await execWelcome(user.name);
       break;
-    case 'unregonized':
+    case 'unrecognized':
       replyText = await execUnrecognized(command.args ?? []);
       break;
     case 'translate':
@@ -61,10 +61,10 @@ export function parseBotCommand(text: string): BotCommand {
     .split(' ')
     .map((str) => str.trim());
   const firstWord = words.slice().shift();
-  const commandName = commandsMap.get(firstWord ?? '') ?? 'unregonized';
+  const commandName = commandsMap.get(firstWord ?? '') ?? 'unrecognized';
   return {
     name: commandName,
-    args: commandName === 'unregonized' ? words : words.slice(1),
+    args: commandName === 'unrecognized' ? words : words.slice(1),
   };
 }
 
