@@ -60,7 +60,7 @@ export function parseBotCommand(text: string): BotCommand {
     .trim()
     .split(' ')
     .map((str) => str.trim());
-  const firstWord = words.slice().shift();
+  const firstWord = words.slice().shift()?.toLowerCase();
   const commandName = commandsMap.get(firstWord ?? '') ?? 'unrecognized';
   return {
     name: commandName,

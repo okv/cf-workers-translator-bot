@@ -13,7 +13,12 @@ const commandsParams = {
 vi.mock('translator');
 
 describe('bot-command#execMessageCommand', () => {
-  it('should welcome when the message is "hi"', async () => {
+  it('should welcome when the message is "!hi"', async () => {
+    const replyText = await execMessageCommand('!hi', user, commandsParams);
+    expect(replyText).toMatch(/^Hey test-user123, I'm a translator bot/);
+  });
+
+  it('should welcome when the message is "!Hi"', async () => {
     const replyText = await execMessageCommand('!hi', user, commandsParams);
     expect(replyText).toMatch(/^Hey test-user123, I'm a translator bot/);
   });
