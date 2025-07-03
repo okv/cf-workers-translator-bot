@@ -69,11 +69,11 @@ export function parseBotCommand(text: string): BotCommand {
 }
 
 export async function execWelcome(name: string): Promise<string> {
-  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 just drop me a message like "@trans katzen sind super" to get it translated into English 🇬🇧`;
+  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 just drop me a message like "!translate katzen sind super" to get it translated into English 🇬🇧`;
 }
 
 export async function execUnrecognized(args: string[]): Promise<string> {
-  return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with @hi 😉`;
+  return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with !hi 😉`;
 }
 
 export async function execTranslate(
