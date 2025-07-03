@@ -18,10 +18,11 @@ graph LR
 The worker itself tries to do as less as possible and uses the following libraries:
 
 - [packages/whatsapp](/packages/whatsapp/) to receive and send WhatsApp messages.
+- [packages/translator](/packages/translator/) to translate words and phrases.
 
 ## Features
 
 The bot can:
 
-- Receive a message and say hi :wave: back :tada:
-- For now that would be it :smiley:
+- Receive a message and say hi :wave: back :tada:.
+- Translate words and phrases using '!translate' command.
