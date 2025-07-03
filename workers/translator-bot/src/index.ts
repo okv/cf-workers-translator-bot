@@ -11,13 +11,20 @@ export default {
         WHATSAPP_TOKEN: token,
         WHATSAPP_APP_SECRET: appSecret,
         WHATSAPP_VERIFY_TOKEN: verifyToken,
+        TRANSLATION_API_KEY: translationApiKey,
       } = env;
 
       switch (request.method) {
         case 'GET':
           return getHandler(verifyToken, request);
         case 'POST':
-          return await postHandler(token, appSecret, request, onMessage);
+          return await postHandler(appSecret, request, (message, metadata) => {
+            return onMessage(message, {
+              ...metadata,
+              whatsappToken: token,
+              translationApiKey,
+            });
+          });
       }
     }
 

@@ -24,6 +24,7 @@
     "wrangler": "^4.22.0"
   },
   "dependencies": {
-    "whatsapp": "workspace:*"
+    "whatsapp": "workspace:*",
+    "translator": "workspace:*"
   }
 }
