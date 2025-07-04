@@ -79,8 +79,8 @@ export async function execUnrecognized(args: string[]): Promise<string> {
 /**
  * This function parses a command param from args, for example:
  *
- * > parseCommandModifier('to', false, ['some', 'text', '!to', 'de'])
- * { modifier: 'de', restArgs: ['some', 'text'] }
+ * > parseCommandParam('to', false, ['some', 'text', '!to', 'de'])
+ * { param: 'de', restArgs: ['some', 'text'] }
  *
  */
 export function parseCommandParam(
@@ -139,8 +139,8 @@ export async function execTranslate(
   try {
     const apiKey = commandsParams.translationApiKey;
     [translation] = await translateText(text, toLang, { apiKey });
-  } catch (error) {
-    console.error('Error while translating:', { error });
+  } catch (error: any) {
+    console.error('Error while translating:', error.message ?? error);
     return 'Oops... something went wrong while translating 😅 sorry, try again later';
   }
 
