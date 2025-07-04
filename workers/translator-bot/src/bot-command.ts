@@ -81,9 +81,16 @@ export async function execTranslate(
   commandsParams: CommandsParams,
 ): Promise<string> {
   const text = args.join(' ');
-  const [translation] = await translateText(text, 'en', {
-    apiKey: commandsParams.translationApiKey,
-  });
+  let translation;
+
+  try {
+    [translation] = await translateText(text, 'en', {
+      apiKey: commandsParams.translationApiKey,
+    });
+  } catch (error) {
+    console.error('Error while translating:', { error });
+    return 'Oops... something went wrong while translating 😅 sorry, try again later';
+  }
 
   if (translation) {
     return `"${translation.text}" means "${translation.translatedText}" in "${translation.fromLang}" 💡`;

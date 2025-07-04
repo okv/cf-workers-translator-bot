@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import { execMessageCommand, stripCommandSpaces } from '../src/bot-command';
 import { translateText } from 'translator';
 
@@ -13,6 +13,10 @@ const commandsParams = {
 vi.mock('translator');
 
 describe('bot-command#execMessageCommand', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
   it('should welcome when the message is "!hi"', async () => {
     const replyText = await execMessageCommand('!hi', user, commandsParams);
     expect(replyText).toMatch(/^Hey test-user123, I'm a translator bot/);
@@ -44,6 +48,13 @@ describe('bot-command#execMessageCommand', () => {
   it('should put it straight when there is nothing translate', async () => {
     const replyText = await execMessageCommand('!translate', user, commandsParams);
     expect(replyText).toMatch(/^There is nothing to translate/);
+  });
+
+  it('should say something when there is a translation error', async () => {
+    vi.mocked(translateText).mockRejectedValueOnce(new Error('Cannot translate'));
+
+    const replyText = await execMessageCommand('!translate katzen', user, commandsParams);
+    expect(replyText).toMatch(/Oops... something went wrong while translating/);
   });
 });
 
