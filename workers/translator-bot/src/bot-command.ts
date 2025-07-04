@@ -76,6 +76,49 @@ export async function execUnrecognized(args: string[]): Promise<string> {
   return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with !hi 😉`;
 }
 
+/**
+ * This function parses a command param from args, for example:
+ *
+ * > parseCommandModifier('!to', false, ['some', 'text', '!to', 'de'])
+ * { modifier: 'de', restArgs: ['some', 'text'] }
+ *
+ */
+export function parseCommandParam(
+  name: string,
+  flag: boolean,
+  args: string[],
+): {
+  param: string | boolean | null;
+  restArgs: string[];
+} {
+  let modifier: string | boolean | null = null;
+  const restArgs: string[] = [];
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+
+    if (modifier === null) {
+      if (arg === `!${name}`) {
+        if (flag) {
+          modifier = true;
+        } else if (!flag && args[index + 1]) {
+          // inc the index to avoid including the value to the restArgs
+          index += 1;
+          modifier = args[index];
+        } else {
+          restArgs.push(arg);
+        }
+      } else {
+        restArgs.push(arg);
+      }
+    } else {
+      restArgs.push(arg);
+    }
+  }
+
+  return { param: modifier, restArgs };
+}
+
 export async function execTranslate(
   args: string[],
   commandsParams: CommandsParams,
