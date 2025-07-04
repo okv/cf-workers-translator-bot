@@ -45,6 +45,23 @@ describe('bot-command#execMessageCommand', () => {
     expect(replyText).toMatch(/^"katzen" means "cats" in "de"/);
   });
 
+  it('should translate when it can with "to" param', async () => {
+    vi.mocked(translateText).mockResolvedValueOnce([
+      {
+        text: 'cats are wild',
+        fromLang: 'en',
+        translatedText: 'katzen sind wild',
+      },
+    ]);
+
+    const replyText = await execMessageCommand(
+      '!translate cats are wild !to de',
+      user,
+      commandsParams,
+    );
+    expect(replyText).toMatch(/^"cats are wild" means "katzen sind wild" in "en"/);
+  });
+
   it('should put it straight when there is nothing translate', async () => {
     const replyText = await execMessageCommand('!translate', user, commandsParams);
     expect(replyText).toMatch(/^There is nothing to translate/);
@@ -101,7 +118,7 @@ describe('bot-command#parseCommandParam', () => {
     expect(parsed).toEqual({ param: 'de', restArgs: ['some', 'text'] });
   });
 
-  it.skip('should return null for a non-flag param when it is there but no value', () => {
+  it('should return null for a non-flag param when it is there but no value', () => {
     const parsed = parseCommandParam('to', false, ['some', 'text', '!to']);
     expect(parsed).toEqual({ param: null, restArgs: ['some', 'text', '!to'] });
   });
