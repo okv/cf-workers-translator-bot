@@ -69,21 +69,80 @@ export function parseBotCommand(text: string): BotCommand {
 }
 
 export async function execWelcome(name: string): Promise<string> {
-  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 just drop me a message like "!translate katzen sind super" to get it translated into English 🇬🇧`;
+  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 Just drop me a message like "!translate katzen sind super" to get it translated into English 🇬🇧  You can also text me something like "!translate some text !to de" to translate it to German 🇩🇪`;
 }
 
 export async function execUnrecognized(args: string[]): Promise<string> {
   return `Hm... "${args.join(' ')}" not sure what it means, can we maybe start over with !hi 😉`;
 }
 
+/**
+ * This function parses a command param from args, for example:
+ *
+ * > parseCommandParam('to', false, ['some', 'text', '!to', 'de'])
+ * { param: 'de', restArgs: ['some', 'text'] }
+ *
+ */
+export function parseCommandParam(
+  name: string,
+  flag: boolean,
+  args: string[],
+): {
+  param: string | boolean | null;
+  restArgs: string[];
+} {
+  let modifier: string | boolean | null = null;
+  const restArgs: string[] = [];
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+
+    if (modifier === null) {
+      if (arg === `!${name}`) {
+        if (flag) {
+          modifier = true;
+        } else if (!flag && args[index + 1]) {
+          // inc the index to avoid including the value to the restArgs
+          index += 1;
+          modifier = args[index];
+        } else {
+          restArgs.push(arg);
+        }
+      } else {
+        restArgs.push(arg);
+      }
+    } else {
+      restArgs.push(arg);
+    }
+  }
+
+  return { param: modifier, restArgs };
+}
+
 export async function execTranslate(
   args: string[],
   commandsParams: CommandsParams,
 ): Promise<string> {
-  const text = args.join(' ');
-  const [translation] = await translateText(text, 'en', {
-    apiKey: commandsParams.translationApiKey,
-  });
+  let toLang: string;
+  let text: string;
+
+  const { param: toLangParam, restArgs } = parseCommandParam('to', false, args);
+  if (typeof toLangParam === 'string') {
+    toLang = toLangParam;
+    text = restArgs.join(' ');
+  } else {
+    toLang = 'en';
+    text = args.join(' ');
+  }
+
+  let translation;
+  try {
+    const apiKey = commandsParams.translationApiKey;
+    [translation] = await translateText(text, toLang, { apiKey });
+  } catch (error: any) {
+    console.error('Error while translating:', error.message ?? error);
+    return 'Oops... something went wrong while translating 😅 sorry, try again later';
+  }
 
   if (translation) {
     return `"${translation.text}" means "${translation.translatedText}" in "${translation.fromLang}" 💡`;
