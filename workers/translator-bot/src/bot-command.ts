@@ -69,7 +69,7 @@ export function parseBotCommand(text: string): BotCommand {
 }
 
 export async function execWelcome(name: string): Promise<string> {
-  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 Just drop me a message like "!translate katzen sind super" to get it translated into English 🇬🇧You can also text something like "!translate some text !to de" to translate it to German 🇩🇪`;
+  return `Hey ${name}, I'm a translator bot and I can help you to learn languages 📚 Just drop me a message like "!translate katzen sind super" to get it translated into English 🇬🇧You can also tex me something like "!translate some text !to de" to translate it to German 🇩🇪`;
 }
 
 export async function execUnrecognized(args: string[]): Promise<string> {
