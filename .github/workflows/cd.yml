@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-and-test:
+  setup-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,14 @@ jobs:
         with:
           run_install: false
 
-      - name: Deploy
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: pnpm
+
+      - name: Deploy translator bot
         uses: cloudflare/wrangler-action@v3
         with:
+          workingDirectory: "workers/translator-bot"
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
