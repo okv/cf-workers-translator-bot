@@ -24,6 +24,9 @@ jobs:
           node-version-file: '.nvmrc'
           cache: pnpm
 
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Deploy translator bot
         uses: cloudflare/wrangler-action@v3
         with:
