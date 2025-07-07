@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-and-test:
+  check-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,3 +34,10 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      - name: Deploy
+        # Deploy only the main branch
+        if: github.ref == 'refs/heads/main'
+        run: pnpm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
