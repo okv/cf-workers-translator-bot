@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "check": "pnpm run --recursive check",
+    "deploy": "pnpm run --recursive deploy",
     "test": "pnpm run --recursive test"
   },
   "keywords": [
