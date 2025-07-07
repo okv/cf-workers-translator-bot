@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-and-test:
+  check-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
