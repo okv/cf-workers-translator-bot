@@ -1,0 +1,1 @@
+../../shared/configs/vitest.config.worker.mts
