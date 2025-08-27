@@ -1,12 +1,17 @@
-export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-    const url: URL = new URL(request.url);
-    const { pathname } = url;
+import { Hono } from 'hono';
 
-    if (pathname === '/translations') {
-      return new Response('Translations Page');
-    }
+type Bindings = {
+  TRANSLATION_API_KEY: string;
+};
 
-    return new Response('Not Found');
-  },
-} satisfies ExportedHandler<Env>;
+const app = new Hono<{ Bindings: Bindings }>();
+
+app.get('/translations', async () => {
+  return new Response('Translations Page');
+});
+
+app.notFound(async () => {
+  return new Response('Not Found');
+});
+
+export default app;
