@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "translator-bot",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-06-27",
+	"compatibility_date": "2025-08-27",
 	"observability": {
 		"enabled": true
 	},
